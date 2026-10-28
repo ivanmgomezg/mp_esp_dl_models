@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Fix MicroPython version
         run: |
-          echo "MPY_RELEASE=v1.27.0" >> $GITHUB_ENV
+          echo "MPY_RELEASE=v1.26.1" >> $GITHUB_ENV
 
       - name: Cache ESP-IDF and MicroPython
         id: cache_esp_idf
@@ -53,11 +53,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
 
-      - name: Clone MicroPython latest release (if not cached)
+      - name: Clone MicroPython (if not cached)
         if: steps.cache_esp_idf.outputs.cache-hit != 'true'
         run: |
           cd ~
-          # git clone --depth 1 --branch mp-dl https://github.com/cnadler86/micropython.git ${{ env.MICROPYTHON_DIR }}
           git clone https://github.com/micropython/micropython.git ${{ env.MICROPYTHON_DIR }}
           cd ${{ env.MICROPYTHON_DIR }}
           git checkout v1.26.1
@@ -68,7 +67,6 @@ jobs:
         if: steps.cache_esp_idf.outputs.cache-hit != 'true'
         run: |
           cd ~
-          # git clone --depth 1 --branch release/v5.4 https://github.com/espressif/esp-idf.git ${{ env.ESP_IDF_DIR }}
           git clone --depth 1 --branch v5.4.2 https://github.com/espressif/esp-idf.git ${{ env.ESP_IDF_DIR }}
           git -C ${{ env.ESP_IDF_DIR }} submodule update --init --recursive --filter=tree:0
           cd ${{ env.ESP_IDF_DIR }} && ./install.sh esp32s3
@@ -96,22 +94,22 @@ jobs:
             ~/.espressif/
             ~/.cache/pip/
             ${{ env.MICROPYTHON_DIR }}
-          key: mpy-${{ env.MPY_RELEASE }
+          key: mpy-${{ env.MPY_RELEASE }}
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Build MicroPython
         run: |
           source ${{ env.ESP_IDF_DIR }}/export.sh
           cd ${{ github.workspace }} && cd ..
           git clone https://github.com/cnadler86/micropython-camera-API.git
           git clone https://github.com/cnadler86/mp_jpeg.git
-          
+
           cd ${{ github.workspace }}/boards/
-          
-          # Check if a variant is defined and adjust the idf.py command
+
           IFS='@' read -r BUILD_TARGET CAMERA_MODEL <<< "${{ matrix.board }}"
           IFS='-' read -r BOARD_NAME BOARD_VARIANT <<< "${BUILD_TARGET}"
 
@@ -126,12 +124,12 @@ jobs:
             echo "FW_NAME=${BUILD_TARGET}" >> $GITHUB_ENV
             FINAL_CMD="${IDF_CMD} build"
           fi
-          
+
           eval "$FINAL_CMD"
 
           cd build-$BUILD_TARGET
           python ${{ env.MICROPYTHON_DIR }}/ports/esp32/makeimg.py sdkconfig bootloader/bootloader.bin partition_table/partition-table.bin micropython.bin firmware.bin micropython.uf2
-          
+
           mkdir -p ${{ env.ARTIFACTS_DIR }}
           mv firmware.bin ${{ env.ARTIFACTS_DIR }}/firmware-$BUILD_TARGET.bin
 
