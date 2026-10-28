@@ -88,7 +88,7 @@ else()
         set(MP_JPEG_SRC "${MP_JPEG_DIR}/micropython.cmake")
     elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../../mp_jpeg")
         message(STATUS "Found mp_jpeg directory at same level as mp_esp_dl module")
-        set(MP_JPEG_SRC "${CMAKE_CURRENT_LIST_DIR}/../../micropython.cmake")
+        set(MP_JPEG_SRC "${CMAKE_CURRENT_LIST_DIR}/../../mp_jpeg/micropython.cmake")
     endif()
 
     # Add MP_JPEG_SRC cmake file to target_sources if it is defined
