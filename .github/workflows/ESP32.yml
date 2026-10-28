@@ -46,7 +46,6 @@ jobs:
             ~/.cache/pip/
             ${{ env.MICROPYTHON_DIR }}
           key: mpy-${{ env.MPY_RELEASE }}
-          restore-keys: mpy-
 
       - name: Install dependencies (if not cached)
         if: steps.cache_esp_idf.outputs.cache-hit != 'true'
@@ -61,7 +60,7 @@ jobs:
           # git clone --depth 1 --branch mp-dl https://github.com/cnadler86/micropython.git ${{ env.MICROPYTHON_DIR }}
           git clone https://github.com/micropython/micropython.git ${{ env.MICROPYTHON_DIR }}
           cd ${{ env.MICROPYTHON_DIR }}
-          git checkout v1.27.0
+          git checkout v1.26.1
           git submodule update --init --depth 1
           cd mpy-cross && make
 
@@ -87,7 +86,7 @@ jobs:
     steps:
       - name: Fix MicroPython version
         run: |
-          echo "MPY_RELEASE=v1.27.0" >> $GITHUB_ENV
+          echo "MPY_RELEASE=v1.26.1" >> $GITHUB_ENV
 
       - name: Cache ESP-IDF and MicroPython
         uses: actions/cache@v4
@@ -97,16 +96,12 @@ jobs:
             ~/.espressif/
             ~/.cache/pip/
             ${{ env.MICROPYTHON_DIR }}
-          key: mpy-${{ env.MPY_RELEASE }}
-          restore-keys: mpy-
+          key: mpy-${{ env.MPY_RELEASE }
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Fix stale sdkconfig.usb reference (MicroPython 1.27.0)
-        run: |
-          sed -i '/boards\/sdkconfig\.usb/d' ${{ github.workspace }}/boards/ESP32_GENERIC_S3/mpconfigboard.cmake
       - name: Build MicroPython
         run: |
           source ${{ env.ESP_IDF_DIR }}/export.sh
