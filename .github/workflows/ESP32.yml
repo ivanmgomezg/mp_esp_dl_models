@@ -106,7 +106,7 @@ jobs:
           submodules: recursive
       - name: Fix stale sdkconfig.usb reference (MicroPython 1.27.0)
         run: |
-          sed -i '/boards\/sdkconfig\.usb/d' ${{ env.MICROPYTHON_DIR }}/ports/esp32/boards/ESP32_GENERIC_S3/mpconfigboard.cmake
+          sed -i '/boards\/sdkconfig\.usb/d' ${{ github.workspace }}/boards/ESP32_GENERIC_S3/mpconfigboard.cmake
       - name: Build MicroPython
         run: |
           source ${{ env.ESP_IDF_DIR }}/export.sh
