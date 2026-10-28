@@ -31,10 +31,9 @@ jobs:
   setup-environment:
     runs-on: ubuntu-24.04
     steps:
-      - name: Get MicroPython latest release
+      - name: Fix MicroPython version
         run: |
-          MPY_RELEASE=$(curl --silent "https://api.github.com/repos/micropython/micropython/releases/latest" | jq -r .tag_name)
-          echo "MPY_RELEASE=${MPY_RELEASE}" >> $GITHUB_ENV
+          echo "MPY_RELEASE=v1.27.0" >> $GITHUB_ENV
 
       - name: Cache ESP-IDF and MicroPython
         id: cache_esp_idf
@@ -62,6 +61,7 @@ jobs:
           # git clone --depth 1 --branch mp-dl https://github.com/cnadler86/micropython.git ${{ env.MICROPYTHON_DIR }}
           git clone https://github.com/micropython/micropython.git ${{ env.MICROPYTHON_DIR }}
           cd ${{ env.MICROPYTHON_DIR }}
+          git checkout v1.27.0
           git submodule update --init --depth 1
           cd mpy-cross && make
 
@@ -82,17 +82,12 @@ jobs:
       fail-fast: false
       matrix:
         board:
-          - ESP32_GENERIC_S3-SPIRAM_OCT
-          - ESP32_GENERIC_S3-FLASH_4M
-          - ESP32_GENERIC_S3-FLASH_16M
-          - ESP32_GENERIC_S3-FLASH_16M@FREENOVE_ESP32S3_CAM
           - ESP32_GENERIC_S3-SPIRAM_OCT@XIAO_ESP32S3
 
     steps:
-      - name: Get MicroPython latest release
+      - name: Fix MicroPython version
         run: |
-          MPY_RELEASE=$(curl --silent "https://api.github.com/repos/micropython/micropython/releases/latest" | jq -r .tag_name)
-          echo "MPY_RELEASE=${MPY_RELEASE}" >> $GITHUB_ENV
+          echo "MPY_RELEASE=v1.27.0" >> $GITHUB_ENV
 
       - name: Cache ESP-IDF and MicroPython
         uses: actions/cache@v4
@@ -148,7 +143,7 @@ jobs:
         with:
           name: firmware-${{ env.MPY_RELEASE }}-${{ env.FW_NAME }}
           path: ${{ env.ARTIFACTS_DIR }}/**
-          retention-days: 5
+          retention-days: 30
 
       - name: Upload build logs on failure
         if: failure()
@@ -157,4 +152,4 @@ jobs:
           name: build-logs-${{ matrix.board }}
           path: |
             ${{ github.workspace }}/boards/build-${{ matrix.board }}/log/
-          retention-days: 5
+          retention-days: 30
