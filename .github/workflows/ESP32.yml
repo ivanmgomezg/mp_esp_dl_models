@@ -107,7 +107,10 @@ jobs:
           cd ${{ github.workspace }} && cd ..
           git clone https://github.com/cnadler86/micropython-camera-API.git
           git clone https://github.com/cnadler86/mp_jpeg.git
-
+          
+          sed -i 's/ esp32-camera COMPONENT_DIR/ espressif__esp32-camera COMPONENT_DIR/' micropython-camera-API/micropython.cmake
+          grep -n "esp32-camera COMPONENT_DIR" micropython-camera-API/micropython.cmake
+          
           cd ${{ github.workspace }}/boards/
 
           IFS='@' read -r BUILD_TARGET CAMERA_MODEL <<< "${{ matrix.board }}"
