@@ -106,7 +106,9 @@ jobs:
           source ${{ env.ESP_IDF_DIR }}/export.sh
           cd ${{ github.workspace }} && cd ..
           git clone https://github.com/cnadler86/micropython-camera-API.git
+          git -C micropython-camera-API checkout 8df3f70b20e52adad24f3f3de42628366f11cc06
           git clone https://github.com/cnadler86/mp_jpeg.git
+          git -C mp_jpeg checkout 7215ab1ccd4f66d9f651c7c59f65c9c7974a7528
           
           sed -i 's/ esp32-camera COMPONENT_DIR/ espressif__esp32-camera COMPONENT_DIR/' micropython-camera-API/micropython.cmake
           grep -n "esp32-camera COMPONENT_DIR" micropython-camera-API/micropython.cmake
