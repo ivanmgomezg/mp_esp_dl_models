@@ -137,6 +137,7 @@ jobs:
 
           mkdir -p ${{ env.ARTIFACTS_DIR }}
           mv firmware.bin ${{ env.ARTIFACTS_DIR }}/firmware-$BUILD_TARGET.bin
+          cp sdkconfig ${{ env.ARTIFACTS_DIR }}/sdkconfig-$BUILD_TARGET.txt
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
