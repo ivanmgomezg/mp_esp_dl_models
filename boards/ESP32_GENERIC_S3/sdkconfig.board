@@ -1,14 +1,19 @@
-set(IDF_TARGET esp32s3)
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
 
-set(SDKCONFIG_DEFAULTS
-    ${MICROPY_PORT_DIR}/boards/sdkconfig.base
-    ${MICROPY_PORT_DIR}/boards/sdkconfig.usb
-    ${MICROPY_PORT_DIR}/boards/sdkconfig.ble
-    ${MICROPY_PORT_DIR}/boards/sdkconfig.spiram_sx
-    ESP32_GENERIC_S3/sdkconfig.board
-)
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions-8MiB.csv"
 
-include($ENV{IDF_PATH}/tools/cmake/version.cmake)
-set(IDF_VERSION "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}.${IDF_VERSION_PATCH}")
+# This config is enabled in esp-dl examples and probaly gives a better performance,
+# but it is not compatibe with MicroPython at the moment (MicroPython 1.25; IDF 5.4.1).
+# CONFIG_SPIRAM_XIP_FROM_PSRAM=y
 
-set(MP_DL_FACE_DETECTOR_ENABLED 1)
+# Needed for better AI performance
+CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB=y
+CONFIG_ESP32S3_DATA_CACHE_64KB=y
+CONFIG_ESP32S3_DATA_CACHE_LINE_64B=y
+CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=n
+CONFIG_ESP_TASK_WDT_TIMEOUT_S=40
