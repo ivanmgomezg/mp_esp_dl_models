@@ -7,7 +7,7 @@ static const char *path = (const char *)human_face_feat_espdl;
 static const char *path = "human_face_feat";
 #else
 #if !defined(CONFIG_BSP_SD_MOUNT_POINT)
-#define CONFIG_BSP_SD_MOUNT_POINT "/sdcard"
+#define CONFIG_BSP_SD_MOUNT_POINT "/sd"
 #endif
 #endif
 namespace human_face_recognition {
