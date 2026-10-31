@@ -23,3 +23,12 @@ CONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP=y
 CONFIG_ESP_WIFI_STATIC_RX_BUFFER_NUM=4
 CONFIG_ESP_WIFI_DYNAMIC_RX_BUFFER_NUM=16
 CONFIG_ESP_WIFI_RX_BA_WIN=4
+
+# A9: modelo de reconocimiento facial MBF_S8_V1 en vez de MFN_S8_V1.
+# Se carga desde la microSD (mount point /sd) en vez de ir embebido en la
+# partición factory: MBF pesa ~3,4 MB contra ~1,2 MB de MFN, y no entra
+# junto con el resto del firmware en la partición actual.
+CONFIG_HUMAN_FACE_FEAT_MODEL_IN_FLASH_RODATA=
+CONFIG_HUMAN_FACE_FEAT_MODEL_IN_SDCARD=y
+CONFIG_HUMAN_FACE_FEAT_MFN_S8_V1=
+CONFIG_HUMAN_FACE_FEAT_MBF_S8_V1=y
