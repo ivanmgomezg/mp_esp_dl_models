@@ -11,8 +11,14 @@
 #include "dl_tensor_base.hpp"
 namespace human_face_recognition {
 class MFN : public dl::feat::FeatImpl {
+private:
+    // Solo se usa cuando el modelo se carga desde la microSD (A9): es el buffer
+    // del modelo leido con el sistema de archivos de MicroPython.
+    fbs::FbsModel *m_fbs_model_owned = nullptr;
+
 public:
     MFN(const char *model_name);
+    ~MFN();
 };
 
 using MBF = MFN;
